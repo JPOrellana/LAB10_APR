@@ -27,6 +27,8 @@ import numpy as np
 import gymnasium as gym
 import ale_py  
 
+from dqn_agent import DQNAgent  # <- NUEVO: para cargar el modelo entrenado
+
 
 # -----------------------------------------------------------
 # Configuración general
@@ -176,20 +178,34 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=None, help="Semilla para reproducibilidad")
     parser.add_argument("--out", type=str, default=DEFAULT_OUT_DIR, help="Carpeta de salida del MP4")
     parser.add_argument("--email", type=str, default=STUDENT_EMAIL_DEFAULT, help="Correo para nombrar el MP4")
+    # NUEVO: ruta al modelo entrenado
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Ruta a un modelo entrenado (por ejemplo, DQN). Si no se proporciona, se usa política aleatoria.",
+    )
     args = parser.parse_args()
 
     # 1) Dependencias de video
     _ensure_video_deps()
 
-    # 2) Ejecutar y grabar (política aleatoria por defecto)
+    # 2) Preparar la política (modelo entrenado o aleatoria)
+    if args.model is not None:
+        print(f"Cargando modelo entrenado desde: {args.model}")
+        policy = DQNAgent.load(args.model)
+    else:
+        policy = None  # mantiene el comportamiento original: política aleatoria
+
+    # 3) Ejecutar y grabar
     video_path, score, steps, ts = _record_episode(
-        policy=None,            
+        policy=policy,
         student_email=args.email,
         seed=args.seed,
         out_dir=args.out,
     )
 
-    # 3) Resumen ordenado en consola
+    # 4) Resumen ordenado en consola
     _print_summary_box(video_path, score, steps, ts, args.email)
 
 
