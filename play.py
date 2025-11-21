@@ -8,10 +8,6 @@ Proyecto: Interfaz RL para ALE/Galaxian-v5
 Autor   : José Pablo Orellana
 Curso   : Aprendizaje por Refuerzo
 ===========================================================
-Requisitos:
-    pip install gymnasium ale-py numpy moviepy imageio imageio-ffmpeg
-    AutoROM --accept-license --install-dir ~/.ale_roms
-    export ALE_ROM_DIR=~/.ale_roms
 """
 
 # -----------------------------------------------------------
